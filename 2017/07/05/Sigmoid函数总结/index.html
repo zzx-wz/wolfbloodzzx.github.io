@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/images/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.zevzhang.top","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gittalk","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Sigmoid函数又叫Logistic函数，它在机器学习领域有极其重要的地位。以前一直不是很理解Sigmoid函数的重要性，查了很多资料，大体上屡了一下，不过数学功底太差，很多地方理解的不够透彻。这里简单记录一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sigmoid函数总结">
+<meta property="og:url" content="http://blog.zevzhang.top/2017/07/05/Sigmoid%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="知识有限分子">
+<meta property="og:description" content="Sigmoid函数又叫Logistic函数，它在机器学习领域有极其重要的地位。以前一直不是很理解Sigmoid函数的重要性，查了很多资料，大体上屡了一下，不过数学功底太差，很多地方理解的不够透彻。这里简单记录一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://pic.zevzhang.top/image/sigmoid/Logistic-curve.png">
+<meta property="og:image" content="http://pic.zevzhang.top/blog/Normal_Distribution_PDF.png">
+<meta property="og:image" content="http://pic.zevzhang.top/blog/Normal_Distribution_CDF.png">
+<meta property="og:image" content="http://pic.zevzhang.top/image/sigmoid/zhengjing.jpg">
+<meta property="article:published_time" content="2017-07-05T01:44:11.000Z">
+<meta property="article:modified_time" content="2024-12-23T06:33:14.335Z">
+<meta property="article:author" content="zzx">
+<meta property="article:tag" content="sigmoid">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://pic.zevzhang.top/image/sigmoid/Logistic-curve.png">
+
+
+<link rel="canonical" href="http://blog.zevzhang.top/2017/07/05/Sigmoid%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://blog.zevzhang.top/2017/07/05/Sigmoid%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/","path":"2017/07/05/Sigmoid函数总结/","title":"Sigmoid函数总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Sigmoid函数总结 | 知识有限分子</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z7FBSG9JT0"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-Z7FBSG9JT0","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?79e58bf21643872de0733a5361291a0e"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="知识有限分子" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">知识有限分子</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">扯淡为主，瞎掰为辅</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">23</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">7</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">13</span></a></li><li class="menu-item menu-item-札记"><a href="/essay/" rel="section"><i class="fa fa-book fa-fw"></i>札记</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%BD%E6%95%B0%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-number">1.</span> <span class="nav-text">一、函数基本性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Sigmoid%E5%87%BD%E6%95%B0%E4%B8%8E%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="nav-number">2.</span> <span class="nav-text">二、Sigmoid函数与逻辑回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%80%89%E6%8B%A9Sigmoid%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">三、为什么要选择Sigmoid函数？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LR%E7%9A%84%E9%9C%80%E6%B1%82%EF%BC%88%E9%80%89%E6%8B%A9Sigmoid%E6%98%AF%E5%8F%AF%E4%BB%A5%E7%9A%84%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">LR的需求（选择Sigmoid是可以的）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sigmoid%E7%89%B9%E6%AE%8A%E7%9A%84%E6%80%A7%E8%B4%A8%EF%BC%88%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9Sigmoid%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">Sigmoid特殊的性质（为什么选择Sigmoid）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83%E8%A7%A3%E9%87%8A"><span class="nav-number">3.2.1.</span> <span class="nav-text">正态分布解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E8%A7%A3%E9%87%8A"><span class="nav-number">3.2.2.</span> <span class="nav-text">最大熵解释</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">四、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zzx"
+      src="/images/avatar_old.jpeg">
+  <p class="site-author-name" itemprop="name">zzx</p>
+  <div class="site-description" itemprop="description">知识分子必须继续改造自己！</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/zhang-zi-xing-31" title="ZhiHu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;zhang-zi-xing-31" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zzx-zev" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zzx-zev" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.instagram.com/zzxzev/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;zzxzev&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-instagram fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhangzi_xing@hotmail.com" title="E-Mail → mailto:zhangzi_xing@hotmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.zevzhang.top/2017/07/05/Sigmoid%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_old.jpeg">
+      <meta itemprop="name" content="zzx">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="知识有限分子">
+      <meta itemprop="description" content="知识分子必须继续改造自己！">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Sigmoid函数总结 | 知识有限分子">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Sigmoid函数总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-07-05 09:44:11" itemprop="dateCreated datePublished" datetime="2017-07-05T09:44:11+08:00">2017-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-12-23 14:33:14" itemprop="dateModified" datetime="2024-12-23T14:33:14+08:00">2024-12-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Sigmoid函数又叫Logistic函数，它在机器学习领域有极其重要的地位。以前一直不是很理解Sigmoid函数的重要性，查了很多资料，大体上屡了一下，不过数学功底太差，很多地方理解的不够透彻。这里简单记录一下。</p>
+<span id="more"></span>
+<h1 id="一、函数基本性质"><a href="#一、函数基本性质" class="headerlink" title="一、函数基本性质"></a>一、函数基本性质</h1><p>首先Sigmoid的公式形式：<br>$$ S(t)&#x3D;\frac{1}{1+e^{-t}}$$</p>
+<p>函数图像：</p>
+<p><img src="http://pic.zevzhang.top/image/sigmoid/Logistic-curve.png" title="转自维基百科"></p>
+<p>函数的基本性质：</p>
+<ol>
+<li>定义域：$(-\infty,+\infty)$</li>
+<li>值域：$(0,1)$</li>
+<li>函数在定义域内为连续和光滑函数</li>
+<li>处处可导，导数为：$f^{‘}(x)&#x3D;f(x)(1-f(x))$</li>
+</ol>
+<p>最早Logistic函数是皮埃尔·弗朗索瓦·韦吕勒在1844或1845年在研究它与人口增长的关系时命名的。广义Logistic曲线可以模仿一些情况人口增长（P）的 S 形曲线。起初阶段大致是指数增长；然后随着开始变得饱和，增加变慢；最后，达到成熟时增加停止。[^LWiki]</p>
+<h1 id="二、Sigmoid函数与逻辑回归"><a href="#二、Sigmoid函数与逻辑回归" class="headerlink" title="二、Sigmoid函数与逻辑回归"></a>二、Sigmoid函数与逻辑回归</h1><p>Sigmoid函数之所以叫Sigmoid，是因为函数的图像很想一个字母S。这个函数是一个很有意思的函数，从图像上我们可以观察到一些直观的特性：函数的取值在0-1之间，且在0.5处为中心对称，并且越靠近x&#x3D;0的取值斜率越大。</p>
+<p>机器学习中一个重要的预测模型逻辑回归（LR）就是基于Sigmoid函数实现的。LR模型的主要任务是给定一些历史的{X,Y}，其中X是样本n个特征值，Y的取值是{0,1}代表正例与负例，通过对这些历史样本的学习，从而得到一个数学模型，给定一个新的X，能够预测出Y。LR模型是一个二分类模型，即对于一个X，预测其发生或不发生。但事实上，对于一个事件发生的情况，往往不能得到100%的预测，因此LR可以得到一个事件发生的可能性，超过50%则认为事件发生，低于50%则认为事件不发生</p>
+<p>从LR的目的上来看，在选择函数时，有两个条件是必须要满足的：</p>
+<ol>
+<li>取值范围在0~1之间。</li>
+<li>对于一个事件发生情况，50%是其结果的分水岭，选择函数应该在0.5中心对称。</li>
+</ol>
+<p>从这两个条件来看，Sigmoid很好的符合了LR的需求。关于逻辑回归的具体实现与相关问题，可看这篇文章<a target="_blank" rel="noopener" href="http://wenjunoy.com/2016/01/logistic-sigmoid-function.html">Logistic函数（sigmoid函数） - wenjun’s blog</a>，在此不再赘述。</p>
+<h1 id="三、为什么要选择Sigmoid函数？"><a href="#三、为什么要选择Sigmoid函数？" class="headerlink" title="三、为什么要选择Sigmoid函数？"></a>三、为什么要选择Sigmoid函数？</h1><p>很多文章讲到第二章就结束了，试着理解一下，第二章其实是在说LR模型可以选择Sigmoid函数实现，但是为什么选Sigmoid函数而不选择其他函数呢？这其实也是我一直困惑的点。例如仔细观察上述的两个条件，并不是只有Sigmoid能满足这两个条件，取值在0-1之间且以0.5值处中心对称的曲线函数有无数种。</p>
+<p>可以从两个方面试着解释一下为什么选择Sigmoid函数。</p>
+<h2 id="LR的需求（选择Sigmoid是可以的）"><a href="#LR的需求（选择Sigmoid是可以的）" class="headerlink" title="LR的需求（选择Sigmoid是可以的）"></a>LR的需求（选择Sigmoid是可以的）</h2><p>上边从直观上说明了LR可以选择Sigmoid，下面从从数学上解释一下LR模型的原理。</p>
+<p>对于一个分类模型，我们需要给定一个学习目标，对于LR模型来说，这个目标是最大化条件似然度，对于给定一个已知的样本向量x，我们可以表示其对应的类标记y发生的概率为$P(y|x;w)$，在此基础上定义一个最大似然函数学习w，就可以得到一个有效的LR分类模型。</p>
+<p>仔细观察上述对LR的描述，LR模型的重点是如何定义这个条件概率$P(y|x;w)$。对于一个有效的分类器，通常上response value(响应值)即$w\cdot x$（w和x的内积）代表了数据x属于正类（y&#x3D;1）的置信度。$w\cdot x$越大，这个数据属于正类的可能性越大；$w\cdot x$越小，属于反类的可能性越大。因此，如果我们有一个函数能够将$w\cdot x$映射到条件概率$P(y&#x3D;1|x;w)$，而sigmoid函数恰好能实现这一功能（参见sigmoid的函数形状）：首先，它的值域是（0,1），满足概率的要求；其次，它是一个单调上升函数。最终，$p(y&#x3D;1|x，w)&#x3D;sigmoid (w\cdot x)$。sigmoid的这些良好性质恰好能满足LR的需求。[^LRzhihu]</p>
+<h2 id="Sigmoid特殊的性质（为什么选择Sigmoid）"><a href="#Sigmoid特殊的性质（为什么选择Sigmoid）" class="headerlink" title="Sigmoid特殊的性质（为什么选择Sigmoid）"></a>Sigmoid特殊的性质（为什么选择Sigmoid）</h2><p>这里给出两个解释：（个人感觉第二个更准确一点，不过真心看不懂🙄）</p>
+<h3 id="正态分布解释"><a href="#正态分布解释" class="headerlink" title="正态分布解释"></a>正态分布解释</h3><p>大多数情况下，并没有办法知道未知事件的概率分布形式，而在无法得知的情况下，正态分布是一个最好的选择，因为它是所有概率分布中最可能的表现形式。正态分布的概率密度函数如下：</p>
+<p>$f(x)&#x3D;\frac{1}{\delta \sqrt{2 \pi}}e^{-\frac{(x-u)^2}{2\delta^{2}}}$</p>
+<p>在笛卡尔坐标系下，正态分布的函数呈现出“钟”形，如下图。图中四条曲线代表参数不同的四个正态分布。</p>
+<p><img src="http://pic.zevzhang.top/blog/Normal_Distribution_PDF.png" alt="维基百科"></p>
+<p>在假定某个事件的概率分布符合正态分布的规律后，要分析其可能发生的概率，就要看它的积分形式，上图四个正态分布的曲线如图：</p>
+<p><img src="http://pic.zevzhang.top/blog/Normal_Distribution_CDF.png" alt="维基百科"></p>
+<p>Sigmoid函数和正态分布函数的积分形式形状非常类似。但计算正态分布的积分函数，计算代价非常大，而Sigmoid的形式跟它相似，却由于其公式简单，计算量非常的小，因此被选为替代函数。[^ztfb]</p>
+<h3 id="最大熵解释"><a href="#最大熵解释" class="headerlink" title="最大熵解释"></a>最大熵解释</h3><p>该解释是说，在我们给定了某些假设之后，我们希望在给定假设前提下，分布尽可能的均匀。对于Logistic Regression，我们假设了对于{X,Y}，我们预测的目标是$Y|X$，并假设认为$Y|X$服从bernoulli distribution，所以我们只需要知道$P(Y|X)$；其次我们需要一个线性模型，所以$P(Y|X) &#x3D; f(wx)$。接下来我们就只需要知道f是什么就行了。而我们可以通过最大熵原则推出的这个f，就是sigmoid。[^zhihuniming]</p>
+<p>这里给出推导过程，大神们可以看看，我是真没看懂：<br><a target="_blank" rel="noopener" href="http://www.win-vector.com/dfiles/LogisticRegressionMaxEnt.pdf">LogisticRegressionMaxEnt.pdf</a></p>
+<h1 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h1><p>综上所述，Logistics Regression之所以选择Sigmoid或者说Logistics函数，因为它叫Logistics Regression🙄。</p>
+<p><img src="http://pic.zevzhang.top/image/sigmoid/zhengjing.jpg"></p>
+<p>没错，我是正经的，之所以这样说是因为问题在于，并不是只有Sigmoid函数能解决二分类问题。</p>
+<blockquote>
+<p>为什么要选用sigmoid函数呢？为什么不选用其他函数，如probit函数？<br>其实，无论是sigmoid函数还是probit函数都是广义线性模型的连接函数（link function）中的一种。选用联接函数是因为，从统计学角度而言，普通线性回归模型是基于响应变量和误差项均服从正态分布的假设，且误差项具有零均值，同方差的特性。但是，例如分类任务（判断肿瘤是否为良性、判断邮件是否为垃圾邮件），其响应变量一般不服从于正态分布，其服从于二项分布，所以选用普通线性回归模型来拟合是不准确的，因为不符合假设，所以，我们需要选用广义线性模型来拟合数据，通过标准联接函数(canonical link or standard link function)来映射响应变量，如：正态分布对应于恒等式，泊松分布对应于自然对数函数，二项分布对应于logit函数（二项分布是特殊的泊松分布）。因此，说了这么多是想表达联接函数的选取除了必须适应于具体的研究案例，不用纠结于为什么现有的logistic回归会选用sigmoid函数，而不选用probit函数，虽然网上也有不少说法说明为什么选择sigmoid函数，例如“该函数有个漂亮的S型”，“在远离x＝0的地方函数的值会很快接近0&#x2F;1”，“函数在定义域内可微可导”，这些说法未免有些“马后炮”的感觉，哪个说法仔细分析都不能站住脚，我觉得选用sigmoid函数也就是因为该函数满足分类任务，用的人多了也就成了默认说法，这跟给物体取名字有点类似的感觉，都有些主观因素在其中。[^LRSig]</p>
+</blockquote>
+<p>[^LWiki]: <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%82%8F%E8%BC%AF%E5%87%BD%E6%95%B8">逻辑函数 - 维基百科</a></p>
+<p>[^LRzhihu]: <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/35322351/answer/65308207">知乎-为什么 LR 模型要使用 sigmoid 函数，背后的数学原理是什么？-谢澎涛的回答</a></p>
+<p>[^LRSig]: <a target="_blank" rel="noopener" href="http://www.hanlongfei.com/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2015/08/05/mle/">机器学习－逻辑回归与最大似然估计 - Longfei Han</a></p>
+<p>[^ztfb]: <a target="_blank" rel="noopener" href="https://blog.liushuping.com/2016/06/24/Sigmoid%E4%BB%80%E4%B9%88%E9%AC%BC/">Sigmoid什么鬼_ _ Shuping LIU</a></p>
+<p>[^zhihuniming]: <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/35322351/answer/67193153">知乎-为什么 LR 模型要使用 sigmoid 函数，背后的数学原理是什么？-匿名回答</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>zzx
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://blog.zevzhang.top/2017/07/05/Sigmoid%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/" title="Sigmoid函数总结">http://blog.zevzhang.top/2017/07/05/Sigmoid函数总结/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/sigmoid/" rel="tag"><i class="fa fa-tag"></i> sigmoid</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/06/23/%E7%BD%91%E7%BB%9C%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" rel="prev" title="网络表示学习总结">
+                  <i class="fa fa-angle-left"></i> 网络表示学习总结
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/09/16/yilia%E4%B8%BB%E9%A2%98%E5%A2%9E%E5%8A%A0%E5%8F%8B%E8%A8%80%E6%94%AF%E6%8C%81/" rel="next" title="yilia主题增加友言支持">
+                  yilia主题增加友言支持 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">京ICP备18024312号-1 </a>
+      <img src="/images/beian.png" alt=""><a href="https://beian.mps.gov.cn/#/query/webSearch?code=18024312" rel="noopener" target="_blank">京ICP备18024312号 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2017 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">zzx</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zzx-zev" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"zzx-zev","repo":"blog_comment","client_id":"Ov23li6w22t5UJrhm4V7","client_secret":"58e82b7acd384461cf1d61b7fd0ad5574e670562","admin_user":"zzx-zev","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"02fa65e2cf2acb051e57562c2bc7a239"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
